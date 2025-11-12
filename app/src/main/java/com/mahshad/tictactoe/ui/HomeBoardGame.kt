@@ -14,13 +14,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun HomeBoardGame(
     homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val turnStateFlow = homeBoardViewModel._turnStateFlow.collectAsStateWithLifecycle()
+    val gameOverFlow = homeBoardViewModel._gameOverFlow.collectAsStateWithLifecycle()
     val grid = (0..8).toList()
+
     Card(modifier = modifier) {
         grid.chunked(3).forEach { row ->
             Row() {
@@ -34,7 +38,6 @@ fun HomeBoardGame(
                             .background(Color.Gray)
                             .clickable(
                                 enabled = true,
-                                onClickLabel = "",
                                 onClick = { homeBoardViewModel.updateBoard(item) }
                             )
                     )
