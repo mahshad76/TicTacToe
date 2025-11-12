@@ -13,10 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-fun HomeBoardGame(modifier: Modifier = Modifier) {
-    Card() {
+fun HomeBoardGame(homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier) {
+    Card(modifier = modifier) {
         repeat(3) {
             Row() {
                 repeat(3) {
