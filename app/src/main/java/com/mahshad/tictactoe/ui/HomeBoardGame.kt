@@ -16,14 +16,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-fun HomeBoardGame(homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier) {
+fun HomeBoardGame(
+    homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
+    val grid = (0..8).toList()
     Card(modifier = modifier) {
-        repeat(3) {
+        grid.chunked(3).forEach { row ->
             Row() {
-                repeat(3) {
+                row.forEach { item ->
                     Text(
-                        "click",
+                        text = item.toString(),
                         textAlign = TextAlign.Center,
                         modifier = modifier
                             .size(50.dp)
@@ -32,7 +35,7 @@ fun HomeBoardGame(homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
                             .clickable(
                                 enabled = true,
                                 onClickLabel = "",
-                                onClick = { }
+                                onClick = { homeBoardViewModel.updateBoard(item) }
                             )
                     )
                 }
