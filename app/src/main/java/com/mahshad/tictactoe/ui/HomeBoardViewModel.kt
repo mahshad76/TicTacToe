@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeBoardViewModel @Inject constructor() : ViewModel() {
-    val board = mutableMapOf(
+    var board = mutableMapOf(
         0 to 'A',
         1 to 'B',
         2 to 'C',
@@ -23,7 +23,7 @@ class HomeBoardViewModel @Inject constructor() : ViewModel() {
     )
     private val turnStateFlow = MutableStateFlow(true)
     private val gameOverFlow = MutableStateFlow(false)
-    val _gameOverFlow = turnStateFlow.asStateFlow()
+    val _gameOverFlow = gameOverFlow.asStateFlow()
 
     private val colorFlow = MutableStateFlow(MutableList(9) { Color.Gray })
     val _colorFlow = colorFlow.asStateFlow()
@@ -47,18 +47,37 @@ class HomeBoardViewModel @Inject constructor() : ViewModel() {
         if (turnStateFlow.value) {
             board[index] = 'X'
             colorFlow.update {
-                it[index] = Color.Blue
-                return@update it
+                val newList = it.toMutableList()
+                newList[index] = Color.Blue
+                newList
             }
 
         } else {
             board[index] = 'Y'
             colorFlow.update {
-                it[index] = Color.Green
-                return@update it
+                val newList = it.toMutableList()
+                newList[index] = Color.Green
+                newList
             }
         }
         checkGameOver()
         updateTurn()
+    }
+
+    fun reset() {
+        board = mutableMapOf(
+            0 to 'A',
+            1 to 'B',
+            2 to 'C',
+            3 to 'D',
+            4 to 'E',
+            5 to 'F',
+            6 to 'G',
+            7 to 'H',
+            8 to 'I'
+        )
+        turnStateFlow.update { true }
+        gameOverFlow.update { false }
+        colorFlow.update { MutableList(9) { Color.Gray } }
     }
 }

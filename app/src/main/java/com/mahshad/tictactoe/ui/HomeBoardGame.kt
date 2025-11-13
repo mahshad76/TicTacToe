@@ -8,12 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,9 +26,10 @@ fun HomeBoardGame(
     modifier: Modifier = Modifier,
     homeBoardViewModel: HomeBoardViewModel = hiltViewModel()
 ) {
-    //val turnStateFlow = homeBoardViewModel._turnStateFlow.collectAsStateWithLifecycle()
-    val gameOverFlow = homeBoardViewModel._gameOverFlow.collectAsStateWithLifecycle()
+    val colorState = homeBoardViewModel._colorFlow.collectAsStateWithLifecycle()
+    val gameOverState = homeBoardViewModel._gameOverFlow.collectAsStateWithLifecycle()
     val grid = (0..8).toList()
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -42,10 +44,12 @@ fun HomeBoardGame(
                             modifier = modifier
                                 .size(50.dp)
                                 .padding(8.dp)
-                                .background(Color.Gray)
+                                .background(colorState.value[item])
                                 .clickable(
-                                    enabled = true,
-                                    onClick = { homeBoardViewModel.updateBoard(item) }
+                                    enabled = !gameOverState.value,
+                                    onClick = {
+                                        homeBoardViewModel.updateBoard(item)
+                                    }
                                 )
                         )
                     }
@@ -53,6 +57,31 @@ fun HomeBoardGame(
             }
         }
     }
+    if (gameOverState.value) {
+        GameOverDialog(
+            onDismiss = {homeBoardViewModel.reset()}
+        )
+    }
+}
+
+@Composable
+fun GameOverDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = "Game Over!")
+        },
+        text = {
+            Text("A player has won! Click below to play again.")
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss
+            ) {
+                Text("Play Again")
+            }
+        }
+    )
 }
 
 @Composable
