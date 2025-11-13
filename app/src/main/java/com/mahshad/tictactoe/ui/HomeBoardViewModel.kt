@@ -1,5 +1,6 @@
 package com.mahshad.tictactoe.ui
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,11 +22,11 @@ class HomeBoardViewModel @Inject constructor() : ViewModel() {
         8 to 'I'
     )
     private val turnStateFlow = MutableStateFlow(true)
-    val _turnStateFlow = turnStateFlow.asStateFlow()
-
     private val gameOverFlow = MutableStateFlow(false)
     val _gameOverFlow = turnStateFlow.asStateFlow()
 
+    private val colorFlow = MutableStateFlow(MutableList(9) { Color.Gray })
+    val _colorFlow = colorFlow.asStateFlow()
     private fun updateTurn() {
         turnStateFlow.update { !it }
     }
@@ -43,7 +44,20 @@ class HomeBoardViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateBoard(index: Int) {
-        if (turnStateFlow.value) board[index] = 'X' else board[index] = 'Y'
+        if (turnStateFlow.value) {
+            board[index] = 'X'
+            colorFlow.update {
+                it[index] = Color.Blue
+                return@update it
+            }
+
+        } else {
+            board[index] = 'Y'
+            colorFlow.update {
+                it[index] = Color.Green
+                return@update it
+            }
+        }
         checkGameOver()
         updateTurn()
     }

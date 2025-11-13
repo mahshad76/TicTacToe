@@ -21,7 +21,7 @@ fun HomeBoardGame(
     homeBoardViewModel: HomeBoardViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val turnStateFlow = homeBoardViewModel._turnStateFlow.collectAsStateWithLifecycle()
+    //val turnStateFlow = homeBoardViewModel._turnStateFlow.collectAsStateWithLifecycle()
     val gameOverFlow = homeBoardViewModel._gameOverFlow.collectAsStateWithLifecycle()
     val grid = (0..8).toList()
 
